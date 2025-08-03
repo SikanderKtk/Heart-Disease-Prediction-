@@ -8,11 +8,9 @@ import os
 model_path = os.path.join(os.path.dirname(__file__), 'heart_disease_model.pkl')
 model = joblib.load(model_path)
 
-# Load images
-heart_img_path = os.path.join(os.path.dirname(__file__), "heartpic.png")
-predict_img_path = os.path.join(os.path.dirname(__file__), "heartpics.png")
-heart_img = Image.open(heart_img_path)
-predict_img = Image.open(predict_img_path)
+# Load images (in same folder)
+heart_img = Image.open(os.path.join(os.path.dirname(__file__), "heartpic.png"))
+predict_img = Image.open(os.path.join(os.path.dirname(__file__), "heartpics.png"))
 
 # Page styling
 st.set_page_config(page_title="Heart Disease Predictor", layout="centered")
@@ -50,6 +48,7 @@ with st.form("prediction_form"):
 
     submitted = st.form_submit_button("🔍 Predict")
 
+# Prediction output
 if submitted:
     input_data = pd.DataFrame([[age, 1 if sex == 'Male' else 0, cp, trestbps, chol, fbs, restecg,
                                 thalach, exang, oldpeak, slope, ca, thal]],
