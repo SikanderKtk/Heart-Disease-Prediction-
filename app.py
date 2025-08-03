@@ -2,15 +2,17 @@ import streamlit as st
 import pandas as pd
 import joblib
 from PIL import Image
-import os
+from pathlib import Path
+
+# Define base directory
+BASE_DIR = Path(__file__).parent
 
 # Load model
-model_path = os.path.join(os.path.dirname(__file__), 'heart_disease_model.pkl')
-model = joblib.load(model_path)
+model = joblib.load(BASE_DIR / "heart_disease_model.pkl")
 
-# Load images (in same folder)
-heart_img = Image.open(os.path.join(os.path.dirname(__file__), "heartpic.png"))
-predict_img = Image.open(os.path.join(os.path.dirname(__file__), "heartpics.png"))
+# Load images safely
+heart_img = Image.open(BASE_DIR / "heartpic.png")
+predict_img = Image.open(BASE_DIR / "heartpics.png")
 
 # Page styling
 st.set_page_config(page_title="Heart Disease Predictor", layout="centered")
@@ -48,7 +50,6 @@ with st.form("prediction_form"):
 
     submitted = st.form_submit_button("🔍 Predict")
 
-# Prediction output
 if submitted:
     input_data = pd.DataFrame([[age, 1 if sex == 'Male' else 0, cp, trestbps, chol, fbs, restecg,
                                 thalach, exang, oldpeak, slope, ca, thal]],
