@@ -42,7 +42,7 @@ st.markdown("<h1 class='main-title'>💓 Heart Disease Prediction App</h1>", uns
 st.markdown("<p class='sub-title'>Check your heart health using a Machine Learning model</p>", unsafe_allow_html=True)
 
 # Display an online banner image
-st.image("https://cdn.pixabay.com/photo/2020/05/03/17/13/heart-5125177_1280.jpg", use_container_width=True)
+st.image("https://www.istockphoto.com/photo/human-heart-with-blood-vessels-gm1266230179-371131556", use_container_width=True)
 
 st.markdown("---")
 
@@ -90,3 +90,4 @@ if st.sidebar.button("🔍 Predict"):
 # -------------------- FOOTER --------------------
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("<p class='footer'>Made with ❤️ using Streamlit | Powered by Machine Learning</p>", unsafe_allow_html=True)
+
