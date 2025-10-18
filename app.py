@@ -18,7 +18,7 @@ predict_img = Image.open("heartpics.png")
 st.set_page_config(page_title="Heart Disease Predictor", layout="centered")
 
 # Header with heart image
-st.image(heart_img, width=150)
+st.image(heartpic, width=150)
 st.title("💓 Heart Disease Prediction App")
 st.markdown(
     "<h4 style='text-align: center; color: grey;'>Check your heart health using machine learning</h4>",
@@ -75,4 +75,5 @@ st.markdown(
     "<p style='text-align: center; font-size: 13px;'>Made with ❤️ using Streamlit</p>",
     unsafe_allow_html=True,
 )
+
 
