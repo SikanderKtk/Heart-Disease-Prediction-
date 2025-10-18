@@ -2,182 +2,91 @@ import streamlit as st
 import pandas as pd
 import joblib
 from PIL import Image
-from pathlib import Path
 
-# -----------------------------
-# Page Config
-# -----------------------------
-st.set_page_config(page_title="💓 Heart Disease Predictor", page_icon="❤️", layout="wide")
+# -------------------- PAGE CONFIG --------------------
+st.set_page_config(
+    page_title="💓 Heart Disease Prediction App",
+    page_icon="❤️",
+    layout="centered",
+    initial_sidebar_state="expanded"
+)
 
-# -----------------------------
-# Base Directory
-# -----------------------------
-BASE_DIR = Path(__file__).parent
-
-# -----------------------------
-# Custom CSS Styling
-# -----------------------------
+# -------------------- HEADER SECTION --------------------
 st.markdown("""
-<style>
-body {
-    background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
-    color: #222;
-    font-family: 'Poppins', sans-serif;
-}
-.main-title {
-    font-size: 3rem;
-    color: #b30000;
-    font-weight: 800;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-}
-.sub-title {
-    font-size: 1.2rem;
-    color: #444;
-    margin-bottom: 1.5rem;
-}
-.stButton button {
-    background: linear-gradient(90deg, #ff4b2b, #ff416c);
-    color: white;
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 10px;
-    font-weight: 700;
-    transition: 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-.stButton button:hover {
-    transform: scale(1.05);
-    background: linear-gradient(90deg, #ff6f61, #ff9966);
-}
-.result-box {
-    background-color: rgba(255,255,255,0.9);
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-.footer {
-    text-align: center;
-    font-size: 13px;
-    color: #333;
-    margin-top: 2rem;
-}
-</style>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .main-title {
+            text-align: center;
+            color: #E63946;
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+        .sub-title {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .footer {
+            text-align: center;
+            color: #888;
+            margin-top: 40px;
+            font-size: 0.9rem;
+        }
+    </style>
 """, unsafe_allow_html=True)
 
-# -----------------------------
-# Load Model
-# -----------------------------
-MODEL_PATH = BASE_DIR / "heart_disease_model.pkl"
-if not MODEL_PATH.exists():
-    st.error("❌ Model file not found! Make sure 'heart_disease_model.pkl' is in the same directory.")
-    st.stop()
-model = joblib.load(MODEL_PATH)
+st.markdown("<h1 class='main-title'>💓 Heart Disease Prediction App</h1>", unsafe_allow_html=True)
+st.markdown("<p class='sub-title'>Check your heart health using a Machine Learning model</p>", unsafe_allow_html=True)
 
-# -----------------------------
-# Images
-# -----------------------------
-heart_img_path =  BASE_DIR / "heartpic.png"
-
-
-# -----------------------------
-# Header Section (Image + Title Side by Side)
-# -----------------------------
-col1, col2 = st.columns([1, 2])
-
-with col1:
-    if heart_img_path.exists():
-        st.image(str(heart_img_path), width=280)
-    else:
-        st.warning("⚠️ 'heartpic.png' not found.")
-
-with col2:
-    st.markdown("<h1 class='main-title'>💓 Heart Disease Prediction</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='sub-title'>Predict your heart health instantly using a trained Machine Learning model. Get accurate risk assessments and take control of your health today!</p>", unsafe_allow_html=True)
+# Display an online banner image
+st.image("https://cdn.pixabay.com/photo/2020/05/03/17/13/heart-5125177_1280.jpg", use_container_width=True)
 
 st.markdown("---")
 
-# -----------------------------
-# Input Form Section
-# -----------------------------
-st.markdown("### 🩺 Enter Your Medical Details")
-with st.form("prediction_form"):
-    col1, col2 = st.columns(2)
+# -------------------- LOAD MODEL --------------------
+model = joblib.load("heart_disease_model.pkl")
 
-    with col1:
-        age = st.number_input("Age", min_value=1, max_value=120)
-        sex = st.selectbox("Sex", ['Male', 'Female'])
-        cp = st.selectbox("Chest Pain Type", [0, 1, 2, 3])
-        trestbps = st.number_input("Resting Blood Pressure")
-        chol = st.number_input("Cholesterol (mg/dl)")
-        fbs = st.selectbox("Fasting Blood Sugar > 120 mg/dl", [0, 1])
+# -------------------- USER INPUT FORM --------------------
+st.sidebar.header("🩺 Enter Patient Information")
 
-    with col2:
-        restecg = st.selectbox("Resting ECG", [0, 1, 2])
-        thalach = st.number_input("Max Heart Rate")
-        exang = st.selectbox("Exercise Induced Angina", [0, 1])
-        oldpeak = st.number_input("ST Depression")
-        slope = st.selectbox("Slope", [0, 1, 2])
-        ca = st.selectbox("Major Vessels (0–3)", [0, 1, 2, 3])
-        thal = st.selectbox("Thalassemia (0-Normal, 1-Fixed, 2-Reversible)", [0, 1, 2])
+age = st.sidebar.number_input("Age", min_value=1, max_value=120)
+sex = st.sidebar.selectbox("Sex", ['Male', 'Female'])
+cp = st.sidebar.selectbox("Chest Pain Type", [0, 1, 2, 3])
+trestbps = st.sidebar.number_input("Resting Blood Pressure")
+chol = st.sidebar.number_input("Cholesterol (mg/dl)")
+fbs = st.sidebar.selectbox("Fasting Blood Sugar > 120 mg/dl", [0, 1])
+restecg = st.sidebar.selectbox("Resting ECG", [0, 1, 2])
+thalach = st.sidebar.number_input("Max Heart Rate")
+exang = st.sidebar.selectbox("Exercise Induced Angina", [0, 1])
+oldpeak = st.sidebar.number_input("ST Depression")
+slope = st.sidebar.selectbox("Slope", [0, 1, 2])
+ca = st.sidebar.selectbox("Major Vessels (0–3)", [0, 1, 2, 3])
+thal = st.sidebar.selectbox("Thalassemia (0-Normal, 1-Fixed, 2-Reversible)", [0, 1, 2])
 
-    submitted = st.form_submit_button("🔍 Predict")
-
-# -----------------------------
-# Prediction Logic
-# -----------------------------
-if submitted:
-    input_data = pd.DataFrame([[
-        age,
-        1 if sex == 'Male' else 0,
-        cp,
-        trestbps,
-        chol,
-        fbs,
-        restecg,
-        thalach,
-        exang,
-        oldpeak,
-        slope,
-        ca,
-        thal
-    ]], columns=[
-        'age', 'sex', 'cp', 'trestbps', 'chol', 'fbs',
-        'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'
-    ])
+# -------------------- PREDICTION --------------------
+if st.sidebar.button("🔍 Predict"):
+    input_data = pd.DataFrame([[age, 1 if sex == 'Male' else 0, cp, trestbps, chol, fbs,
+                                restecg, thalach, exang, oldpeak, slope, ca, thal]],
+                              columns=['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs',
+                                       'restecg', 'thalach', 'exang', 'oldpeak',
+                                       'slope', 'ca', 'thal'])
 
     prediction = model.predict(input_data)[0]
     probability = model.predict_proba(input_data)[0][prediction]
 
     st.markdown("---")
-    st.markdown("### 💡 Prediction Result")
-    result_container = st.container()
+    st.image("https://cdn-icons-png.flaticon.com/512/765/765613.png", width=120)
 
-    with result_container:
-        st.markdown("<div class='result-box'>", unsafe_allow_html=True)
-        if predict_img_path.exists():
-            st.image(str(predict_img_path), width=120)
+    if prediction == 1:
+        st.error(f"⚠️ **High Risk of Heart Disease Detected!**\n\nConfidence: **{probability:.2%}**")
+        st.image("https://cdn.pixabay.com/photo/2020/05/03/17/12/heart-5125174_1280.jpg", use_container_width=True)
+    else:
+        st.success(f"✅ **Low Risk — No Heart Disease Detected.**\n\nConfidence: **{probability:.2%}**")
+        st.image("https://cdn.pixabay.com/photo/2017/01/06/19/15/heart-1957200_1280.jpg", use_container_width=True)
 
-        if prediction == 1:
-            st.error(f"⚠️ **High Risk of Heart Disease Detected!**\n\n🧠 Confidence: {probability:.2%}")
-        else:
-            st.success(f"✅ **Low Risk. Heart Appears Healthy.**\n\n💪 Confidence: {probability:.2%}")
-        st.markdown("</div>", unsafe_allow_html=True)
-
-# -----------------------------
-# About Section
-# -----------------------------
-st.markdown("---")
-st.markdown("""
-### ℹ️ About This App  
-This web app uses a **Machine Learning model** to predict the likelihood of heart disease based on user-provided medical data.  
-It demonstrates **data preprocessing, model training, and deployment using Streamlit** — bringing AI-powered health insights directly to your screen.
-""")
-
-# -----------------------------
-# Footer
-# -----------------------------
-st.markdown("<p class='footer'>👨‍💻 Developed by Sikander Ktk | Made with ❤️ using Streamlit & Scikit-learn</p>", unsafe_allow_html=True)
-
-
-
-
+# -------------------- FOOTER --------------------
+st.markdown("<hr>", unsafe_allow_html=True)
+st.markdown("<p class='footer'>Made with ❤️ using Streamlit | Powered by Machine Learning</p>", unsafe_allow_html=True)
