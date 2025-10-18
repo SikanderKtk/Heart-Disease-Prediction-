@@ -8,11 +8,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent
 
 # Load model
-model = joblib.load(BASE_DIR / "heart_disease_model.pkl")
+model = joblib.load("heart_disease_model.pkl")
 
 # Load images safely
-heart_img = Image.open(BASE_DIR / "heartpic.png")
-predict_img = Image.open(BASE_DIR / "heartpics.png")
+heart_img = Image.open("heartpic.png")
+predict_img = Image.open("heartpics.png")
 
 # Page styling
 st.set_page_config(page_title="Heart Disease Predictor", layout="centered")
@@ -75,3 +75,4 @@ st.markdown(
     "<p style='text-align: center; font-size: 13px;'>Made with ❤️ using Streamlit</p>",
     unsafe_allow_html=True,
 )
+
