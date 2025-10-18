@@ -76,7 +76,7 @@ model = joblib.load(MODEL_PATH)
 # -----------------------------
 # Images
 # -----------------------------
-heart_img_path =  heart_img_url = "https://cdn-icons-png.flaticon.com/512/2966/2966487.png"
+heart_img_path =  BASE_DIR / "heartpic.png"
 predict_img_path = BASE_DIR / "heartpics.png"
 
 # -----------------------------
@@ -177,5 +177,6 @@ It demonstrates **data preprocessing, model training, and deployment using Strea
 # Footer
 # -----------------------------
 st.markdown("<p class='footer'>👨‍💻 Developed by Sikander Ktk | Made with ❤️ using Streamlit & Scikit-learn</p>", unsafe_allow_html=True)
+
 
 
