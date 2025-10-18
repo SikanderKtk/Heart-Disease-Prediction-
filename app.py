@@ -3,31 +3,53 @@ import pandas as pd
 import joblib
 from PIL import Image
 from pathlib import Path
+import os
 
-# Define base directory
+# -----------------------------
+# Base directory setup
+# -----------------------------
 BASE_DIR = Path(__file__).parent
 
-# Load model
-model = joblib.load("heart_disease_model.pkl")
+# -----------------------------
+# Page Configuration
+# -----------------------------
+st.set_page_config(page_title="💓 Heart Disease Predictor", layout="centered")
 
-# Load images safely
-heart_img = Image.open("heartpic.png")
-predict_img = Image.open("heartpics.png")
+# -----------------------------
+# Safe Model Loading
+# -----------------------------
+MODEL_PATH = BASE_DIR / "heart_disease_model.pkl"
+if not MODEL_PATH.exists():
+    st.error("❌ Model file not found! Please ensure 'heart_disease_model.pkl' is in the same directory.")
+    st.stop()
 
-# Page styling
-st.set_page_config(page_title="Heart Disease Predictor", layout="centered")
+model = joblib.load(MODEL_PATH)
 
-# Header with heart image
-st.image(heartpic, width=150)
+# -----------------------------
+# Image Loading (Safe)
+# -----------------------------
+heart_img_path = BASE_DIR / "heartpic.png"
+predict_img_path = BASE_DIR / "heartpics.png"
+
+if heart_img_path.exists():
+    heart_img = Image.open(heart_img_path)
+    st.image(heart_img, width=150)
+else:
+    st.warning("⚠️ 'heartpic.png' not found. Skipping image.")
+
+# -----------------------------
+# Header
+# -----------------------------
 st.title("💓 Heart Disease Prediction App")
 st.markdown(
     "<h4 style='text-align: center; color: grey;'>Check your heart health using machine learning</h4>",
     unsafe_allow_html=True,
 )
-
 st.markdown("---")
 
-# Input form
+# -----------------------------
+# Input Form
+# -----------------------------
 with st.form("prediction_form"):
     col1, col2 = st.columns(2)
 
@@ -50,18 +72,38 @@ with st.form("prediction_form"):
 
     submitted = st.form_submit_button("🔍 Predict")
 
+# -----------------------------
+# Prediction Logic
+# -----------------------------
 if submitted:
-    input_data = pd.DataFrame([[age, 1 if sex == 'Male' else 0, cp, trestbps, chol, fbs, restecg,
-                                thalach, exang, oldpeak, slope, ca, thal]],
-                              columns=['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs',
-                                       'restecg', 'thalach', 'exang', 'oldpeak',
-                                       'slope', 'ca', 'thal'])
+    input_data = pd.DataFrame([[
+        age,
+        1 if sex == 'Male' else 0,
+        cp,
+        trestbps,
+        chol,
+        fbs,
+        restecg,
+        thalach,
+        exang,
+        oldpeak,
+        slope,
+        ca,
+        thal
+    ]], columns=[
+        'age', 'sex', 'cp', 'trestbps', 'chol', 'fbs',
+        'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'
+    ])
 
     prediction = model.predict(input_data)[0]
     probability = model.predict_proba(input_data)[0][prediction]
 
-    # Show prediction image
-    st.image(predict_img, width=120)
+    # Show prediction image (if exists)
+    if predict_img_path.exists():
+        predict_img = Image.open(predict_img_path)
+        st.image(predict_img, width=120)
+    else:
+        st.warning("⚠️ 'heartpics.png' not found. Skipping result image.")
 
     # Display result
     if prediction == 1:
@@ -69,11 +111,11 @@ if submitted:
     else:
         st.success(f"✅ Low Risk. No Heart Disease Detected.\nConfidence: {probability:.2%}")
 
-# Optional footer
+# -----------------------------
+# Footer
+# -----------------------------
 st.markdown("---")
 st.markdown(
-    "<p style='text-align: center; font-size: 13px;'>Made with ❤️ using Streamlit</p>",
+    "<p style='text-align: center; font-size: 13px;'>Made by Sikander Ktk ❤️ using Streamlit</p>",
     unsafe_allow_html=True,
 )
-
-
